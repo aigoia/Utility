@@ -11,7 +11,9 @@ namespace Script.Common
         float PositionSmoothTime => 0.05f;
         float RotationSmoothFactor => 0.2f;
         float ZoomSmoothTime => 0.1f;
-        float IdleSmoothTime => 0.3f; 
+        float IdleSmoothTime => 0.5f;
+        float IdleMoveSmoothTime => 0.3f;
+        float IdleSpeed => 0.3f;
 
         float _rotationX = 0f;
         float _rotationY = 0f;
@@ -27,6 +29,8 @@ namespace Script.Common
 
         float _idleYOffset;
         float _idleVelocity;
+        
+        
 
         void Start()
         {
@@ -58,7 +62,7 @@ namespace Script.Common
             _targetRotation = Quaternion.Euler(_rotationX, _rotationY, 0f);
             _currentRotation = Quaternion.Slerp(_currentRotation, _targetRotation, RotationSmoothFactor);
             
-            float targetIdleYOffset = (Mathf.PerlinNoise(0f, Time.time * 0.5f) - 0.5f) * 0.3f;
+            float targetIdleYOffset = (Mathf.PerlinNoise(0f, Time.time * IdleMoveSmoothTime) - IdleMoveSmoothTime) * IdleSpeed;
             _idleYOffset = Mathf.SmoothDamp(_idleYOffset, targetIdleYOffset, ref _idleVelocity, IdleSmoothTime);
 
             Vector3 desiredPosition = _targetPosition + _currentRotation * Vector3.forward * _currentZoomDistance;
